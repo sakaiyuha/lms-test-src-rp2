@@ -36,14 +36,17 @@ public class Case01 {
 	@Order(1)
 	@DisplayName("テスト01 トップページURLでアクセス")
 	void test01() {
+
+		//URL
 		goTo("http://localhost:8080/lms/");
 
-		assertEquals("ログイン | LMS", webDriver.getTitle());
+		String pageTitle = webDriver.getTitle();
 
-		getEvidence(new Object());
-		{
-		}
+		assertEquals("ログイン | LMS", pageTitle);
+
+		//エビデンス取得
+		getEvidence(new Object() {
+		});
 	}
 
-	// TODO ここに追加
 }
