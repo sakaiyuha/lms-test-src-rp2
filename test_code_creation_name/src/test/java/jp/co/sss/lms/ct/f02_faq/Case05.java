@@ -135,10 +135,16 @@ public class Case05 {
 
 		pageLoadTimeout(5);
 
+		getEvidence(new Object() {
+		}, "1");
+
 		WebElement result = webDriver.findElement(By.className("mb10"));
 		assertEquals("Q.助成金書類の作成方法が分かりません", result.getText());
+
+		scrollBy("window.innerHeight");
+
 		getEvidence(new Object() {
-		});
+		}, "2");
 	}
 
 	@Test
