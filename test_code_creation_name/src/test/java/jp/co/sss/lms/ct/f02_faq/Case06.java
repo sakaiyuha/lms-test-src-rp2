@@ -134,6 +134,8 @@ public class Case06 {
 		WebElement result = webDriver.findElement(By.className("mb10"));
 		assertEquals("Q.キャンセル料・途中退校について", result.getText());
 
+		scrollBy("window.innerHeight");
+
 		getEvidence(new Object() {
 		});
 
