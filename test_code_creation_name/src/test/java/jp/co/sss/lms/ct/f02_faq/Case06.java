@@ -1,6 +1,9 @@
 package jp.co.sss.lms.ct.f02_faq;
 
 import static jp.co.sss.lms.ct.util.WebDriverUtils.*;
+import static org.junit.Assert.*;
+
+import java.util.Set;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -9,6 +12,11 @@ import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebElement;
+
+import jp.co.sss.lms.ct.util.WebDriverUtils;
 
 /**
  * 結合テスト よくある質問機能
@@ -23,6 +31,7 @@ public class Case06 {
 	@BeforeAll
 	static void before() {
 		createDriver();
+
 	}
 
 	/** 後処理 */
@@ -35,42 +44,119 @@ public class Case06 {
 	@Order(1)
 	@DisplayName("テスト01 トップページURLでアクセス")
 	void test01() {
-		// TODO ここに追加
+		//URL
+		goTo("http://localhost:8080/lms/");
+
+		String pageTitle = webDriver.getTitle();
+
+		assertEquals("ログイン | LMS", pageTitle);
+
+		//エビデンス取得
+		getEvidence(new Object() {
+		});
 	}
 
 	@Test
 	@Order(2)
 	@DisplayName("テスト02 初回ログイン済みの受講生ユーザーでログイン")
 	void test02() {
-		// TODO ここに追加
+		//ログインID
+		WebElement loginId = webDriver.findElement(By.name("loginId"));
+		//パスワード
+		WebElement password = webDriver.findElement(By.name("password"));
+
+		loginId.clear();
+		password.clear();
+
+		//DBに登録されている情報
+		loginId.sendKeys("StudentAA01");
+		password.sendKeys("Testtest01");
+
+		password.sendKeys(Keys.ENTER);
+
+		assertEquals("http://localhost:8080/lms/course/detail", webDriver.getCurrentUrl());
+		//エビデンス取得
+		getEvidence(new Object() {
+		});
 	}
 
 	@Test
 	@Order(3)
 	@DisplayName("テスト03 上部メニューの「ヘルプ」リンクからヘルプ画面に遷移")
 	void test03() {
-		// TODO ここに追加
+
+		WebElement dropdown = webDriver.findElement(By.linkText("機能"));
+		dropdown.click();
+		WebElement help = webDriver.findElement(By.linkText("ヘルプ"));
+		help.click();
+
+		String pageTitle = webDriver.getTitle();
+
+		assertEquals("ヘルプ | LMS", pageTitle);
+
+		getEvidence(new Object() {
+		});
 	}
 
 	@Test
 	@Order(4)
 	@DisplayName("テスト04 「よくある質問」リンクからよくある質問画面を別タブに開く")
 	void test04() {
-		// TODO ここに追加
+
+		WebElement Question = webDriver.findElement(By.linkText("よくある質問"));
+		Question.click();
+
+		String nowWindowHandle = WebDriverUtils.webDriver.getWindowHandle();
+
+		Set<String> windowHandles = WebDriverUtils.webDriver.getWindowHandles();
+
+		for (String handle : windowHandles) {
+			if (!handle.equals(nowWindowHandle)) {
+				WebDriverUtils.webDriver.switchTo().window(handle);
+				break;
+			}
+		}
+		assertEquals("http://localhost:8080/lms/faq", webDriver.getCurrentUrl());
+		//エビデンス取得
+		getEvidence(new Object() {
+		});
+
 	}
 
 	@Test
 	@Order(5)
 	@DisplayName("テスト05 カテゴリ検索で該当カテゴリの検索結果だけ表示")
 	void test05() {
-		// TODO ここに追加
+		WebElement category = webDriver.findElement(By.linkText("【研修関係】"));
+		category.click();
+		pageLoadTimeout(5);
+
+		WebElement result = webDriver.findElement(By.className("mb10"));
+		assertEquals("Q.キャンセル料・途中退校について", result.getText());
+
+		getEvidence(new Object() {
+		});
+
 	}
 
 	@Test
 	@Order(6)
 	@DisplayName("テスト06 検索結果の質問をクリックしその回答を表示")
 	void test06() {
-		// TODO ここに追加
+
+		scrollBy("window.innerHeight");
+
+		WebElement word = webDriver.findElement(By.className("sorting_1"));
+
+		word.click();
+
+		WebElement answer = webDriver.findElement(By.id("answer-h[${status.index}]"));
+
+		String answerText = "A. 受講者の退職や解雇等、やむを得ない事情による途中終了に関してなど、事情をお伺いした上で、協議という形を取らせて頂きます。 弊社営業担当までご相談下さい。";
+		assertEquals(answerText, answer.getText());
+
+		getEvidence(new Object() {
+		});
 	}
 
 }

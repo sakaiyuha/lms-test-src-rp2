@@ -105,10 +105,6 @@ public class Case04 {
 		WebElement Question = webDriver.findElement(By.linkText("よくある質問"));
 		Question.click();
 
-		String pageTitle = webDriver.getTitle();
-
-		assertEquals("よくある質問 | LMS", pageTitle);
-
 		String nowWindowHandle = WebDriverUtils.webDriver.getWindowHandle();
 
 		Set<String> windowHandles = WebDriverUtils.webDriver.getWindowHandles();
@@ -118,9 +114,10 @@ public class Case04 {
 				WebDriverUtils.webDriver.switchTo().window(handle);
 				break;
 			}
-			//エビデンス取得
-			getEvidence(new Object() {
-			});
 		}
+		assertEquals("http://localhost:8080/lms/faq", webDriver.getCurrentUrl());
+		//エビデンス取得
+		getEvidence(new Object() {
+		});
 	}
 }
